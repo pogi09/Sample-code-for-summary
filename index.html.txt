@@ -1,0 +1,142 @@
+
+
+// Это пример теста в POST методе, проверяем
+
+tests["POST is 201"] = responseCode.code === 201;
+if (responseCode.code === 201) {
+    var id = responseHeaders.Location.split('/banks/')[1];
+    // сначала делаем GET и проверим что значения переменных фактически соответсвуют тому что передавалось в POST
+    pm.sendRequest({
+                          url: "http://stage.talkbank.dymov.tech/banks/"+responseHeaders.Location.split('/banks/')[1],
+                          method: 'GET'
+                        //   }
+    }, function (err, response) {
+        tests["GET after POST is 200"] = response.code === 200;
+        if(response.code===200)
+        {
+        //var jsonResPost=response.json();
+            var jsonRes=response.json();
+                tests["POST count.name is good"] = 'Сбербанк' === jsonRes.name;
+                tests["POST id is good"] = id == jsonRes.id;
+                tests["POST inn is good"] = '7707083893' === jsonRes.inn;
+                tests["POST kpp is good"] = '773601001' === jsonRes.kpp;
+                tests["POST license_number is good"] = '912' === jsonRes.license_number;
+                tests["POST license_date is good"] = '2015-08-26' === jsonRes.license_date;
+                tests["POST logo is good"] = 'http://stage.talkbank.dymov.tech/logo/'+jsonRes.logo.split('/')[4] === jsonRes.logo;
+                tests["POST tags is good"] = 'автокредит, ипотека, потребительский' === jsonRes.tags;
+                tests["POST names_alternative is good"] = 'сб' === jsonRes.names_alternative;
+            tests["POST items.filials.name is good"] = 'Центрально-Черноземный' === jsonRes.filials[0].name;
+            tests["POST items.filials.bik is good"] = '042007681' === jsonRes.filials[0].bik;
+            tests["POST items.filials.ks is good"] = '30101810600000000681' === jsonRes.filials[0].ks;
+            // здесь нужен тест для id Filials заполнитьtests["POST items.filials.id is good"] = '' === jsonRes.filials[0].id;
+             tests["POST tsp_fields[0] name is good"] = 'contract_number' === jsonRes.tsp_fields[0].name;
+             tests["POST tsp_fields[0] type is good"] = 'text' === jsonRes.tsp_fields[0].type;
+             tests["POST tsp_fields[0] description is good"] = 'Номер договора' === jsonRes.tsp_fields[0].description;
+             tests["POST tsp_fields[0] maxlength is good"] = '30' == jsonRes.tsp_fields[0].maxlength;
+             tests["POST tsp_fields[0] required is good"] = false === jsonRes.tsp_fields[0].required;
+             tests["POST tsp_fields[0] pattern is good"] = '\\w' === jsonRes.tsp_fields[0].pattern;
+             tests["POST tsp_fields[1] sample is good"] = '62786422' === jsonRes.tsp_fields[0].sample;
+              tests["POST tsp_fields[1] name is good"] = 'contract_date' === jsonRes.tsp_fields[1].name;
+              tests["POST tsp_fields[1] type is good"] = 'date' === jsonRes.tsp_fields[1].type;
+              tests["POST tsp_fields[1] description is good"] = 'Дата договора' === jsonRes.tsp_fields[1].description;
+              tests["POST tsp_fields[1] maxlength is good"] = '10' == jsonRes.tsp_fields[1].maxlength;
+              tests["POST tsp_fields[1] required is good"] = false === jsonRes.tsp_fields[1].required;
+              tests["POST tsp_fields[1] pattern is good"] = '^[1-2]{1}\\d{3}\\-[0-1]{1}\\d{1}\\-[0-3]{1}$' === jsonRes.tsp_fields[1].pattern;
+              tests["POST tsp_fields[1] sample is good"] = '2016-05-27' === jsonRes.tsp_fields[1].sample;
+               tests["POST tsp_fields[2] name is good"] = 'payer_name' === jsonRes.tsp_fields[2].name;
+               tests["POST tsp_fields[2] type is good"] = 'text' === jsonRes.tsp_fields[2].type;
+               tests["POST tsp_fields[2] description is good"] = 'ФИО полностью' === jsonRes.tsp_fields[2].description;
+               tests["POST tsp_fields[2] maxlength is good"] = '100' == jsonRes.tsp_fields[2].maxlength;
+               tests["POST tsp_fields[2] required is good"] = true === jsonRes.tsp_fields[2].required;
+               tests["POST tsp_fields[2] pattern is good"] = '\\w' === jsonRes.tsp_fields[2].pattern;
+               tests["POST tsp_fields[2] sample is good"] = 'Иванов Иван Иванович' === jsonRes.tsp_fields[2].sample;
+                tests["POST tsp_fields[3] name is good"] = 'payer_name' === jsonRes.tsp_fields[3].name;
+                tests["POST tsp_fields[3] type is good"] = 'text' === jsonRes.tsp_fields[3].type;
+                tests["POST tsp_fields[3] description is good"] = 'ФИО полностью' === jsonRes.tsp_fields[3].description;
+                tests["POST tsp_fields[3] maxlength is good"] = '100' == jsonRes.tsp_fields[3].maxlength;
+                tests["POST tsp_fields[3] required is good"] = true === jsonRes.tsp_fields[3].required;
+                tests["POST tsp_fields[3] pattern is good"] = '\\w' === jsonRes.tsp_fields[3].pattern;
+                tests["POST tsp_fields[3] sample is good"] = 'Иванов Иван Иванович' === jsonRes.tsp_fields[3].sample;
+                 tests["POST tsp_fields[4] name is good"] = 'rs' === jsonRes.tsp_fields[4].name;
+                 tests["POST tsp_fields[4] type is good"] = 'text' === jsonRes.tsp_fields[4].type;
+                 tests["POST tsp_fields[4] description is good"] = 'Расчетный счет' === jsonRes.tsp_fields[4].description;
+                 tests["POST tsp_fields[4] maxlength is good"] = '20' == jsonRes.tsp_fields[4].maxlength;
+                 tests["POST tsp_fields[4] required is good"] = true === jsonRes.tsp_fields[4].required;
+                 tests["POST tsp_fields[4] pattern is good"] = '^\\d{20}$' === jsonRes.tsp_fields[4].pattern;
+                 tests["POST tsp_fields[4] sample is good"] = '30101810600000000681' === jsonRes.tsp_fields[4].sample;
+
+
+
+            pm.sendRequest(echoPmRequestPut = {
+                 url: "http://stage.talkbank.dymov.tech/banks/"+responseHeaders.Location.split('/banks/')[1],
+                    method: 'PUT',
+                     header: { "acept": "application/json",
+                               "Content-Type": "application/json"
+                     }, body: {
+                    mode: 'raw',
+                    raw: JSON.stringify({ "name": "Сбербанк1",
+                                          "name_legal": "Сбербанк1",
+                                          "inn": "7707083891",
+                                          "kpp": "773601002",
+                                          "license_number": "912",
+                                          "license_date": "2015-08-26",
+                                          "tags": "автокредит, ипотека, потребительский",
+                                          "names_alternative": "сб"
+                                         })
+                }
+            }, function (err, response) {
+                tests["PUT code is 204"] = response.code === 204;
+                if(response.code === 204)
+                {
+                    // делаем GET
+                    pm.sendRequest({
+                              url: "http://stage.talkbank.dymov.tech/banks/"+responseHeaders.Location.split('/banks/')[1],
+                              method: 'GET'
+                    }, function (err, response) {
+                            // проверяем код 200
+                            tests["GET after PUT is 200"] = response.code === 200;
+                            if(response.code === 200)
+                            {
+                                // проверяем все поля(в GET существует поле LOGOкоторого нет в GET, а в PUT еть name_logo которого нет в GET)
+                                var jsonResPut=response.json();
+                                    tests["GET items.name is good"] = 'Сбербанк1' === jsonResPut.name;
+                                    tests["GET items.name_legal is good"] = 'Сбербанк1' === jsonResPut.name_legal;
+                                    tests["GET items.inn is good"] = '7707083891' === jsonResPut.inn;
+                                    tests["GET items.kpp is good"] = '773601002' === jsonResPut.kpp;
+                                    tests["GET items.license_number is good"] = '912' === jsonResPut.license_number;
+                                    tests["GET items.license_date is good"] = '2015-08-26' === jsonResPut.license_date;
+                                    tests["GET items.tags is good"] = 'автокредит, ипотека, потребительский' === jsonResPut.tags;
+                                    tests["GET items.names_alternative is good"] = 'сб' === jsonResPut.names_alternative;
+
+                            }
+                            // делаем DELETE
+                            pm.sendRequest({
+                              url: "http://stage.talkbank.dymov.tech/banks/"+responseHeaders.Location.split('/banks/')[1],
+                              method: 'DELETE'
+                                }, function (err, response) {
+                                        // проверяем код 204
+                                        tests["DELETE code is 204"] = response.code === 204;
+                                        if(response.code === 204)
+                                        {
+                                            // перепроверяем гетом что обьект действительно удален
+                                            pm.sendRequest({
+                                              url: "http://stage.talkbank.dymov.tech/banks/"+responseHeaders.Location.split('/banks/')[1],
+                                              method: 'GET'
+                                                }, function (err, response) {
+                                                        // проверяем код 404 т.к. обьекта уже не должно быть
+                                                        tests["GET after DELETE is 404"] = response.code === 404;
+                                                });
+                                        }
+                                });
+                    });
+                }
+        });
+        }
+    });
+
+}
+
+
+pm.test("Successful POST request", function () {
+    pm.expect(pm.response.code).to.be.oneOf([201,202]);
+});
